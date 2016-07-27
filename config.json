@@ -1,0 +1,11 @@
+{
+  "baseUrl": "http://lupus-resource-center.dev:3000",
+  "paths": [
+    "/",
+    "/collections",
+    "/topics",
+    "/search/results?q=*"
+  ],
+  "iterations": 10,
+  "parallel": 8
+}

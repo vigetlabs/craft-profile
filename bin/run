@@ -1,0 +1,142 @@
+#!/usr/bin/env node
+
+/**
+ * This program is a command-line node app that leverages PhantomJS
+ * in order to extract and average Craft Profiler statistics that
+ * Craft CMS reports in the browser console when Craft's devMode is on.
+ *
+ * It is useful for viewing averages for Craft execution time and
+ * the number of database queries required to construct the page.
+ *
+ * Options/Flags:
+ *     -b, --baseUrl      Base URL that paths will be appended to
+ *     -p, --paths        Comma-separated list of paths, e.g. "/,/foo,/bar/baz"
+ *     -i, --iterations   How many times to load each page
+ *     -p, --parallel     How many concurrent phantomjs processes to run
+ *     -o, --output       File to write output to, if not specified the program
+ *                          output will be displayed in the terminal
+ *
+ *     -c, --config       Relative path to JSON config file
+ *                          (will override the above flags)
+ *
+ * This program accepts a JSON config file on stdin and will output to
+ * the specified file if the program's output is redirected.
+ **/
+
+var fs   = require('fs')
+var path = require('path')
+var argv = require('minimist')(process.argv.slice(2))
+var init = require('../lib/init')
+
+/**
+ * Default configuration
+ **/
+var config = {
+  baseUrl: '',      // the base URL to resolve paths against
+  paths: [],        // paths to test
+  iterations : 10,  // how many times each path should be loaded
+  parallel: 4       // how many concurrent phantomjs processes to execute
+}
+
+/**
+ * Read and parse user-supplied command-line arguments
+ **/
+var flags = {
+  baseUrl    : argv.b || argv.baseUrl || argv['base-url'] || argv.base_url,
+  paths      : argv.p || argv.paths,
+  iterations : argv.i || argv.iterations,
+  parallel   : argv.l || argv.parallel,
+  config     : argv.c || argv.config
+}
+
+if (flags.baseUrl) {
+  config.baseUrl = flags.baseUrl
+
+  if (typeof config.baseUrl !== 'string' || !config.baseUrl.length) {
+    console.log('Error: "baseUrl" should be a non-empty string')
+    process.exit(1)
+  }
+}
+
+if (flags.paths) {
+  config.paths = flags.paths.split(',')
+
+  if (!config.paths.length) {
+    console.log('Error: "paths" should not be an empty list')
+    process.exit(1)
+  }
+}
+
+if (flags.iterations) {
+  config.iterations = flags.iterations
+
+  if (typeof config.iterations !== 'number') {
+    console.log('Error: "iterations" should be a number')
+    process.exit(1)
+  }
+}
+
+if (flags.parallel) {
+  config.parallel = flags.parallel
+
+  if (typeof config.parallel !== 'number') {
+    console.log('Error: "parallel" should be a number')
+    process.exit(1)
+  }
+}
+
+/**
+ * Read and parse user-supplied json config file
+ **/
+if (flags.config) {
+  var json
+  var fileContents
+  var configPath = path.resolve(process.cwd(), flags.config)
+
+  try {
+    fileContents = fs.readFileSync(configPath)
+  } catch(e) {
+    console.log('Could not open the config file "' + flags.config + '".')
+    process.exit(1)
+  }
+
+  try {
+    json = JSON.parse(fileContents)
+  } catch(e) {
+    console.log('Error parsing config json')
+    process.exit(1)
+  }
+
+  config = Object.assign({}, config, json)
+}
+
+/**
+ * Receive and read user-supplied json config file from stdin if present
+ **/
+if (process.stdin.isTTY) {
+  // NO config provided via stdin
+  init(config)
+} else {
+  // config provided via stdin
+  var stdin = process.stdin
+  var stdout = process.stdout
+  var inputChunks = []
+
+  stdin.on('data', function(chunk) {
+    inputChunks.push(chunk)
+  })
+
+  stdin.on('end', function() {
+    var inputJSON = inputChunks.join()
+    var parsedJSON
+
+    try {
+      parsedJSON = JSON.parse(inputJSON)
+      config = Object.assign({}, config, parsedJSON)
+      init(config)
+    } catch(e) {
+      console.log('Error parsing config JSON')
+      process.exit(1)
+    }
+  })
+}
