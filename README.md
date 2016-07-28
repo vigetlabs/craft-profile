@@ -1,6 +1,8 @@
-# craft-profile
+# craft-profile [WIP]
 
 A command-line tool for gathering Craft CMS Profiling data and reporting averages.
+
+This tool is a **work in progress**. Expect instability and bugs. I plan to release this on NPM when I have time to add tests. If you'd like to try this tool out, great! I would appreciate any and all feedback - don't hesitate to open an issue.
 
 See `TODO.md` for notes about progress and future features.
 
