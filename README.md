@@ -43,18 +43,18 @@ By default `craft-profile` will print a nicely formatted table to `stdout`.
     $ ./bin/craft-profile -c config.json
 
     $ ./bin/craft-profile -b http://mysite.dev:3000 \
-                         -p /,/foo,/bar,/baz/qux \
-                         -i 20
+                          -p /,/foo,/bar,/baz/qux \
+                          -i 20
 
     $ ./bin/craft-profile --base-url=http://localhost:3000 \
-                          --paths=/,/foo,/bar,/baz/qux
+                          --paths=/,/foo,/bar,/baz/qux \
                           --iterations=20
 
 ### Options/Flags:
 
 |short|long|description|
 |---|---|---|
--b|--baseUrl|Base URL that paths will be appended to
+-b|--base-url|Base URL that paths will be appended to
 -p|--paths|Comma-separated list of paths, e.g. "/,/foo,/bar/baz"
 -i|--iterations|How many times to load each page
 -w|--workers|How much concurrency (how many workers)
