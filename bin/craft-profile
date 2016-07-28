@@ -55,6 +55,7 @@ const flags = {
   paths      : argv.p || argv.paths,
   iterations : argv.i || argv.iterations,
   workers    : argv.w || argv.workers,
+  timeout    : argv.t || argv.timeout,
   config     : argv.c || argv.config,
   delay      : argv.d || argv.delay,
   verbose    : argv.verbose
