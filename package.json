@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "short": "./bin/run -b http://lupus-resource-center.dev:3000 -p /,/topics,/collections -i 20",
-    "verbose": "./bin/run -b http://lupus-resource-center.dev:3000 -p /,/topics,/collections -i 5 --verbose",
-    "long": "./bin/run --baseUrl=http://lupus-resource-center.dev:3000 --paths=/,/topics,/collections --iterations=20 --workers=3",
-    "json": "./bin/run < config.json",
-    "config": "./bin/run -c config.json",
-    "configlong": "./bin/run --config config.json",
+    "short": "./bin/craft-profile -b http://lupus-resource-center.dev:3000 -p /,/topics,/collections -i 20",
+    "verbose": "./bin/craft-profile -b http://lupus-resource-center.dev:3000 -p /,/topics,/collections -i 5 --verbose",
+    "long": "./bin/craft-profile --baseUrl=http://lupus-resource-center.dev:3000 --paths=/,/topics,/collections --iterations=20 --workers=3",
+    "json": "./bin/craft-profile < config.json",
+    "config": "./bin/craft-profile -c config.json",
+    "configlong": "./bin/craft-profile --config config.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Solomon Hawk <solomon.hawk@viget.com> (http://viget.com/)",
