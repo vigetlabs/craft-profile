@@ -8,10 +8,14 @@
     "/topics",
     "/topics/causes",
     "/topics/lupus-in-the-body",
+    "/resources",
+    "/entry/how-lupus-affects-the-body",
+    "/entry/page-block-testing",
     "/search/results?q=*"
   ],
-  "iterations": 5,
+  "iterations": 10,
   "workers": 1,
   "timeout": 10000,
-  "delay": 200
+  "delay": 300,
+  "verbose": false
 }

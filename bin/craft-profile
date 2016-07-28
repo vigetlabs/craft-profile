@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * This program is a command-line node app that leverages PhantomJS
- * in order to extract and average Craft Profiler statistics that
- * Craft CMS reports in the browser console when Craft's devMode is on.
+ * This program is a command-line node app that extracts and averages
+ * Craft Profiler statistics that Craft CMS reports in the browser
+ * console when Craft's devMode is on.
  *
  * It is useful for viewing averages for Craft execution time and
  * the number of database queries required to construct the page.
@@ -38,13 +38,13 @@ const invariant = require('invariant')
  * Default configuration
  **/
 let config = {
-  baseUrl: '',
-  paths: [],
-  iterations: 10,
-  workers: 4,
-  timeout: 5000,
-  delay: 0,
-  verbose: false
+  baseUrl    : '',
+  paths      : [],
+  iterations : 10,
+  workers    : 4,
+  timeout    : 5000,
+  delay      : 0,
+  verbose    : false
 }
 
 /**
@@ -152,11 +152,9 @@ if (process.stdin.isTTY) {
 
   process.stdin.on('end', function() {
     const inputJSON = inputChunks.join()
-    let parsedJSON
 
     try {
-      parsedJSON = JSON.parse(inputJSON)
-      config = Object.assign({}, config, parsedJSON)
+      config = Object.assign({}, config, JSON.parse(inputJSON))
       init(config)
     } catch(e) {
       console.log('Error parsing config JSON')
