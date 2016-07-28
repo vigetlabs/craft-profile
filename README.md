@@ -54,7 +54,7 @@ By default `craft-profile` will print a nicely formatted table to `stdout`.
 
 |short|long|description|
 |---|---|---|
--b|--base-url|Base URL that paths will be appended to
+-b|--base-url|Base URL that paths will be appended to (aliases: baseUrl, base-url, base_url)
 -p|--paths|Comma-separated list of paths, e.g. "/,/foo,/bar/baz"
 -i|--iterations|How many times to load each page
 -w|--workers|How much concurrency (how many workers)
