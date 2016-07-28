@@ -1,11 +1,11 @@
 {
-  "name": "craft-profile-average",
-  "version": "1.0.0",
+  "name": "craft-profile",
+  "version": "0.1.0",
   "engines": {
     "node": "5.4",
     "npm": "3.3.12"
   },
-  "description": "",
+  "description": "A command-line tool for gathering Craft CMS Profiling data and reporting averages",
   "main": "index.js",
   "scripts": {
     "short": "./bin/craft-profile -b http://lupus-resource-center.dev:3000 -p /,/topics,/collections -i 20",
@@ -22,7 +22,6 @@
     "cli-table": "0.3.1",
     "invariant": "2.2.1",
     "minimist": "1.2.0",
-    "phantomjs-prebuilt": "2.1.8",
     "request": "2.74.0"
   }
 }
