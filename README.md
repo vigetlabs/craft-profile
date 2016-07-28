@@ -1,6 +1,8 @@
 # craft-profile [WIP]
 
-A command-line tool for gathering Craft CMS Profiling data and reporting averages.
+Have you found yourself working on a Craft site and constantly opening up devtools to look at Craft's Template Profiling output (Execution Time & Total Queries)? Have you ever wanted to know what the _average_ execution time is over a number of requests? Do you really want to do all that yourself, manually?
+
+Enter `craft-profile`: a command-line tool for gathering Craft CMS Profiling data and reporting averages.
 
 This tool is a **work in progress**. Expect instability and bugs. I plan to release this on NPM when I have time to add tests. If you'd like to try this tool out, great! I would appreciate any and all feedback - don't hesitate to open an issue.
 
