@@ -6,12 +6,25 @@ See `TODO.md` for notes about progress and future features.
 
 ![screenshot](screenshot.png)
 
+### Requirements
+
+**Important**: In order for this script to work, your Craft site must have `devMode` on (so that Craft's Template Profiling data is injected into pages).
+
+* Node >=5.4
+* NPM >= 3.3.12
+
 ### Installation / Setup
+
+Clone the repository and `cd` into the root directory.
+
+Install dependencies from `npm`:
+    
+    $ npm install
 
 Ensure the files in `/bin` are executable:
 
-    chmod a+x bin/craft-profile
-    chmod a+x bin/worker
+    $ chmod a+x bin/craft-profile
+    $ chmod a+x bin/worker
 
 OPTIONAL: Add the bin folder location to your $PATH, to allow execution of `craft-profile` without typing out the full location to the binary.
 

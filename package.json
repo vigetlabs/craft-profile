@@ -1,6 +1,10 @@
 {
   "name": "craft-profile-average",
   "version": "1.0.0",
+  "engines": {
+    "node": "5.4",
+    "npm": "3.3.12"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
