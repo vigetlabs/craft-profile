@@ -31,7 +31,7 @@
 const fs        = require('fs')
 const path      = require('path')
 const argv      = require('minimist')(process.argv.slice(2), { boolean: 'verbose' })
-const init      = require('../lib/init')
+const start     = require('../lib/main')
 const invariant = require('invariant')
 
 /**
@@ -142,7 +142,7 @@ invariant(
  **/
 if (process.stdin.isTTY) {
   // NO config provided via stdin
-  init(config)
+  start(config)
 } else {
   // config provided via stdin
   let inputChunks = []
@@ -156,7 +156,7 @@ if (process.stdin.isTTY) {
 
     try {
       config = Object.assign({}, config, JSON.parse(inputJSON))
-      init(config)
+      start(config)
     } catch(e) {
       console.log('Error parsing config JSON')
       process.exit(1)
