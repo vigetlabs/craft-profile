@@ -2,6 +2,7 @@
 
 A command-line tool for gathering Craft CMS Profiling data and reporting averages.
 
+![screenshot](screenshot.png)
 
 ### Usage
 
