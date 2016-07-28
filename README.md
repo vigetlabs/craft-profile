@@ -6,6 +6,17 @@ See `TODO.md` for notes about progress and future features.
 
 ![screenshot](screenshot.png)
 
+### Installation / Setup
+
+Ensure the files in `/bin` are executable:
+
+    chmod a+x bin/craft-profile
+    chmod a+x bin/worker
+
+OPTIONAL: Add the bin folder location to your $PATH, to allow execution of `craft-profile` without typing out the full location to the binary.
+
+Reference the `config.json.example` for creating your own project's `craft-profile` config file. Alternatively, you may just use the command-line options.
+
 ### Usage
 
 The basic premise is you provide `craft-profile` with a `baseUrl` and a list of `paths` to visit (URLs are created by appending each `path` to the `baseUrl`) along with a few other parameters. `craft-profile` handles issuing all of the requests, parsing out the profile data, and then aggregating, averaging, and reporting the results.
