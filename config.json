@@ -13,9 +13,9 @@
     "/entry/page-block-testing",
     "/search/results?q=*"
   ],
-  "iterations": 10,
+  "iterations": 3,
   "workers": 1,
   "timeout": 10000,
-  "delay": 300,
-  "verbose": false
+  "delay": 100,
+  "verbose": true
 }
