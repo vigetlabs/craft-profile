@@ -2,6 +2,8 @@
 
 A command-line tool for gathering Craft CMS Profiling data and reporting averages.
 
+See `TODO.md` for notes about progress and future features.
+
 ![screenshot](screenshot.png)
 
 ### Usage
