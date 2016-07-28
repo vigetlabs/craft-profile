@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "short": "./bin/run -b http://lupus-resource-center.dev:3000 -p /,/topics,/collections -i 20 -l 10",
-    "long": "./bin/run --baseUrl=http://lupus-resource-center.dev:3000 --paths=/,/topics,/collections --iterations=20 --parallel=7",
+    "short": "./bin/run -b http://lupus-resource-center.dev:3000 -p /,/topics,/collections -i 20",
+    "verbose": "./bin/run -b http://lupus-resource-center.dev:3000 -p /,/topics,/collections -i 5 --verbose",
+    "long": "./bin/run --baseUrl=http://lupus-resource-center.dev:3000 --paths=/,/topics,/collections --iterations=20 --workers=3",
     "json": "./bin/run < config.json",
     "config": "./bin/run -c config.json",
     "configlong": "./bin/run --config config.json",
@@ -14,7 +15,10 @@
   "author": "Solomon Hawk <solomon.hawk@viget.com> (http://viget.com/)",
   "license": "ISC",
   "dependencies": {
+    "cli-table": "0.3.1",
+    "invariant": "2.2.1",
     "minimist": "1.2.0",
-    "phantomjs-prebuilt": "2.1.8"
+    "phantomjs-prebuilt": "2.1.8",
+    "request": "2.74.0"
   }
 }

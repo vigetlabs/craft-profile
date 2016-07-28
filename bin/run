@@ -12,7 +12,10 @@
  *     -b, --baseUrl      Base URL that paths will be appended to
  *     -p, --paths        Comma-separated list of paths, e.g. "/,/foo,/bar/baz"
  *     -i, --iterations   How many times to load each page
- *     -p, --parallel     How many concurrent phantomjs processes to run
+ *     -w, --workers      How much concurrency (how many workers)
+ *     -t, --timeout      How long to wait before bailing on a request
+ *     -d, --delay        How long to wait before initiating subsequent requests
+ *     -v, --verbose      Output additional information while running
  *     -o, --output       File to write output to, if not specified the program
  *                          output will be displayed in the terminal
  *
@@ -23,65 +26,48 @@
  * the specified file if the program's output is redirected.
  **/
 
-var fs   = require('fs')
-var path = require('path')
-var argv = require('minimist')(process.argv.slice(2))
-var init = require('../lib/init')
+'use strict'
+
+const fs        = require('fs')
+const path      = require('path')
+const argv      = require('minimist')(process.argv.slice(2), { boolean: 'verbose' })
+const init      = require('../lib/init')
+const invariant = require('invariant')
 
 /**
  * Default configuration
  **/
-var config = {
-  baseUrl: '',      // the base URL to resolve paths against
-  paths: [],        // paths to test
-  iterations : 10,  // how many times each path should be loaded
-  parallel: 4       // how many concurrent phantomjs processes to execute
+let config = {
+  baseUrl: '',
+  paths: [],
+  iterations: 10,
+  workers: 4,
+  timeout: 5000,
+  delay: 0,
+  verbose: false
 }
 
 /**
  * Read and parse user-supplied command-line arguments
  **/
-var flags = {
+const flags = {
   baseUrl    : argv.b || argv.baseUrl || argv['base-url'] || argv.base_url,
   paths      : argv.p || argv.paths,
   iterations : argv.i || argv.iterations,
-  parallel   : argv.l || argv.parallel,
-  config     : argv.c || argv.config
+  workers    : argv.w || argv.workers,
+  config     : argv.c || argv.config,
+  delay      : argv.d || argv.delay,
+  verbose    : argv.verbose
 }
 
-if (flags.baseUrl) {
-  config.baseUrl = flags.baseUrl
+/**
+ * Copy values from flags to config if defined and not-null
+ **/
+for (let flag in flags) {
+  let value = flags[flag]
 
-  if (typeof config.baseUrl !== 'string' || !config.baseUrl.length) {
-    console.log('Error: "baseUrl" should be a non-empty string')
-    process.exit(1)
-  }
-}
-
-if (flags.paths) {
-  config.paths = flags.paths.split(',')
-
-  if (!config.paths.length) {
-    console.log('Error: "paths" should not be an empty list')
-    process.exit(1)
-  }
-}
-
-if (flags.iterations) {
-  config.iterations = flags.iterations
-
-  if (typeof config.iterations !== 'number') {
-    console.log('Error: "iterations" should be a number')
-    process.exit(1)
-  }
-}
-
-if (flags.parallel) {
-  config.parallel = flags.parallel
-
-  if (typeof config.parallel !== 'number') {
-    console.log('Error: "parallel" should be a number')
-    process.exit(1)
+  if (value !== undefined && value !== null) {
+    config[flag] = value
   }
 }
 
@@ -89,9 +75,9 @@ if (flags.parallel) {
  * Read and parse user-supplied json config file
  **/
 if (flags.config) {
-  var json
-  var fileContents
-  var configPath = path.resolve(process.cwd(), flags.config)
+  const configPath = path.resolve(process.cwd(), flags.config)
+  let fileContents
+  let json
 
   try {
     fileContents = fs.readFileSync(configPath)
@@ -111,6 +97,46 @@ if (flags.config) {
 }
 
 /**
+ * Ensure config.paths is an array
+ **/
+if (!isArray(config.paths)) {
+  config.paths = config.paths.split(',')
+}
+
+/**
+ * Validate config values
+ **/
+invariant(
+  typeof config.baseUrl === 'string' && config.baseUrl.length,
+  '"baseUrl" should be a non-empty string'
+)
+
+invariant(
+  config.paths.length,
+  '"paths" should not be an empty list'
+)
+
+invariant(
+  typeof config.iterations === 'number',
+  '"iterations" should be a number'
+)
+
+invariant(
+  typeof config.workers === 'number',
+  '"workers" should be a number'
+)
+
+invariant(
+  typeof config.delay === 'number',
+  '"delay" should be a number'
+)
+
+invariant(
+  typeof config.verbose === 'boolean',
+  '"verbose" should be a number'
+)
+
+/**
  * Receive and read user-supplied json config file from stdin if present
  **/
 if (process.stdin.isTTY) {
@@ -118,17 +144,15 @@ if (process.stdin.isTTY) {
   init(config)
 } else {
   // config provided via stdin
-  var stdin = process.stdin
-  var stdout = process.stdout
-  var inputChunks = []
+  let inputChunks = []
 
-  stdin.on('data', function(chunk) {
+  process.stdin.on('data', function(chunk) {
     inputChunks.push(chunk)
   })
 
-  stdin.on('end', function() {
-    var inputJSON = inputChunks.join()
-    var parsedJSON
+  process.stdin.on('end', function() {
+    const inputJSON = inputChunks.join()
+    let parsedJSON
 
     try {
       parsedJSON = JSON.parse(inputJSON)
@@ -139,4 +163,8 @@ if (process.stdin.isTTY) {
       process.exit(1)
     }
   })
+}
+
+function isArray(maybeArr) {
+  return Object.prototype.toString.call(maybeArr) === '[object Array]'
 }

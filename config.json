@@ -3,9 +3,15 @@
   "paths": [
     "/",
     "/collections",
+    "/collections/i-might-have-lupus",
+    "/collections/i-have-lupus",
     "/topics",
+    "/topics/causes",
+    "/topics/lupus-in-the-body",
     "/search/results?q=*"
   ],
-  "iterations": 10,
-  "parallel": 8
+  "iterations": 5,
+  "workers": 1,
+  "timeout": 10000,
+  "delay": 200
 }

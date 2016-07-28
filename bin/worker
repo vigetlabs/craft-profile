@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+
+// receives jobs on stdin one at a time, with new ones arriving after this
+// program completes its computation and generates it's output on stdout
+'use strict'
+
+const TIMEOUT = Number(process.env.TIMEOUT)
+
+const request   = require('request')
+const captureRe = /(Time|Total\sQueries):\s*([0-9\.]+)/gm
+
+process.stdin.on('data', function(chunk) {
+  try {
+    handle(JSON.parse(chunk.toString()))
+  } catch(e) {
+    process.stdout.write(JSON.stringify({ error: e.msg }))
+  }
+})
+
+function handle(job) {
+  request({ uri: job.url, timeout: TIMEOUT }, (err, response, body) => {
+    if (err) {
+      job.error = err
+      process.stdout.write(JSON.stringify(job))
+      return
+    }
+
+    let matches = getMatches(body)
+
+    job.time = matches.time || null
+    job.queries = matches.queries || null
+
+    process.stdout.write(JSON.stringify(job))
+  })
+}
+
+function getMatches(string) {
+  const index = 1
+  const matches = {}
+  let match
+
+  while (match = captureRe.exec(string)) {
+    matches[toKey(match[index])] = match[index+1]
+  }
+
+  return matches
+}
+
+const keyMap = {
+  'Time': 'time',
+  'Total Queries': 'queries',
+}
+
+function toKey(str) {
+  if (str in keyMap) {
+    return keyMap[str]
+  } else {
+    return str
+  }
+}
